@@ -1,9 +1,15 @@
-/* Fundo leve */
-.main {
+/* Fundo da página */
+[data-testid="stAppViewContainer"] {
     background-color: #f2f4f7 !important;
 }
 
-/* Cards modernos */
+/* Ajuste geral do conteúdo */
+[data-testid="stAppViewContainer"] .main, 
+.block-container {
+    padding-top: 20px !important;
+}
+
+/* Cards */
 .card {
     background: white;
     padding: 22px;
@@ -12,28 +18,42 @@
     margin-bottom: 20px;
 }
 
-/* Botões modernos */
-.stButton > button  {
-    background-color: #4CAF50;
-    color: white;
-    border-radius: 10px;
-    padding: 0.7rem 1.4rem;
-    font-size: 1rem;
-    border: none;
+/* Botão customizado */
+.stButton > button {
+    background-color: #4CAF50 !important;
+    color: white !important;
+    border-radius: 10px !important;
+    padding: 0.7rem 1.4rem !important;
+    font-size: 1rem !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: 0.2s ease;
 }
 
-/* Inputs arredondados */
-.stTextInput > div > div > input,
-.stNumberInput > div > input {
+.stButton > button:hover {
+    background-color: #45a049 !important;
+}
+
+/* Inputs gerais */
+input[type="text"],
+input[type="number"],
+textarea {
+    border-radius: 10px !important;
+    border: 1px solid #ccc !important;
+    padding: 8px !important;
+}
+
+/* Date input e outros */
+[data-testid="stDateInput"] input {
     border-radius: 10px !important;
 }
 
 /* Selectbox */
-.stSelectbox > div {
+[data-testid="stSelectbox"] > div {
     border-radius: 10px !important;
 }
 
-/* Headers */
+/* Títulos */
 h1, h2, h3 {
-    font-family: "Segoe UI", sans-serif;
+    font-family: "Segoe UI", sans-serif !important;
 }
