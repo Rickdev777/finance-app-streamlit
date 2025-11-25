@@ -110,10 +110,11 @@ def mostrar_tela_registro():
                 if ok:
                     st.success("Conta criada com sucesso!")
                     st.info("Voltando ao login...")
-                    try:
-                        st.switch_page("app.py")
-                    except:
-                        st.rerun()
+
+                    # ← CORRETO
+                    st.session_state["pagina"] = "login"
+                    st.rerun()
+
 
     st.markdown("<br>", unsafe_allow_html=True)
 
