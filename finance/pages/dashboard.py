@@ -9,12 +9,6 @@ st.set_page_config(page_title="Dashboard", layout="wide")
 css_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "style.css")
 
 
-def mostrar_dashboard():
-    st.title("📊 Dashboard")
-    st.write("Conteúdo do dashboard aqui.")
-
-
-
 with open(css_path) as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
@@ -22,7 +16,7 @@ if "usuario" not in st.session_state:
     st.switch_page("app.py")
 
 user = st.session_state["usuario"]
-st.title(f"📊 Dashboard – {user}")
+st.title(f" Dashboard – {user}")
 
 # Carregar dados
 df_desp = pd.DataFrame(listar_despesas(user), columns=["ID", "Descrição", "Valor", "Categoria", "Data"])

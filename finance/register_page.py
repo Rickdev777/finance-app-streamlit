@@ -1,121 +1,133 @@
 import streamlit as st
-from database import criar_tabelas, conectar
+from database import registrar_usuario
 
-st.set_page_config(
-    page_title="Sistema Financeiro",
-    page_icon="💰",
-    layout="wide"
-)
+def mostrar_tela_registro():
+    st.set_page_config(page_title="Criar Conta", layout="centered")
 
-criar_tabelas()
+    # CSS compatível com modo claro e escuro
+    st.markdown("""
+        <style>
 
-# Estados
-if "logado" not in st.session_state:
-    st.session_state["logado"] = False
+        /* Centralizar tudo */
+        .main {
+            display: flex;
+            justify-content: center;
+            padding-top: 4vh;
+        }
 
-if "pagina" not in st.session_state:
-    st.session_state["pagina"] = "login"
+        /* Card moderno */
+        .register-wrapper {
+            width: 100%;
+            max-width: 420px;
+            background: var(--background-color);
+            padding: 2.2rem 2rem;
+            border-radius: 16px;
+            box-shadow: 0 6px 22px rgba(0,0,0,0.25);
+            backdrop-filter: blur(6px);
+        }
 
-if "usuario" not in st.session_state:
-    st.session_state["usuario"] = ""
+        /* Suporte a modo claro/escuro do Streamlit */
+        :root {
+            --background-color: rgba(255, 255, 255, 0.12);
+            --text-color: #e8e8e8;
+            --input-bg: rgba(255,255,255,0.08);
+            --button-primary: #4CAF50;
+            --button-secondary: #3b3d42;
+        }
 
-# --------------------- LOGIN ESTILIZADO --------------------- #
-def mostrar_login():
-    st.title("Login Financeiro 💰")
+        [data-theme="light"] {
+            --background-color: #ffffff;
+            --text-color: #333;
+            --input-bg: #f1f1f1;
+            --button-secondary: #e5e7eb;
+        }
+
+        .register-title {
+            color: var(--text-color);
+            text-align: center;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        .register-sub {
+            text-align: center;
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 1.8rem;
+        }
+
+        /* Inputs */
+        .stTextInput>div>div>input {
+            background: var(--input-bg) !important;
+            color: var(--text-color) !important;
+            border-radius: 10px !important;
+            height: 45px;
+        }
+
+        /* Botões */
+        .stButton>button {
+            width: 100%;
+            height: 45px;
+            border-radius: 10px;
+            font-size: 1rem;
+            border: none;
+        }
+
+        /* Criar Conta */
+        .create-btn button {
+            background: var(--button-primary) !important;
+            color: white !important;
+        }
+
+        /* Voltar */
+        .back-btn button {
+            background: var(--button-secondary) !important;
+            color: var(--text-color) !important;
+        }
+
+        </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown("<div class='register-wrapper'>", unsafe_allow_html=True)
+
+    st.markdown("<div class='register-title'>Criar nova conta</div>", unsafe_allow_html=True)
+    st.markdown("<div class='register-sub'>Preencha seus dados abaixo.</div>", unsafe_allow_html=True)
 
     usuario = st.text_input("Usuário")
     senha = st.text_input("Senha", type="password")
 
-    if st.button("Entrar"):
-        conn = conectar()
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM usuarios WHERE usuario = ? AND senha = ?", (usuario, senha))
-        dados = cursor.fetchone()
-        conn.close()
+    st.markdown("<br>", unsafe_allow_html=True)
 
-        if dados:
-            st.session_state["logado"] = True
-            st.session_state["usuario"] = usuario
-            st.session_state["pagina"] = "Dashboard"
-            st.rerun()
-        else:
-            st.error("Usuário ou senha incorretos.")
+    # Botão criar conta
+    create = st.container()
+    with create:
+        if st.button("Criar Conta", use_container_width=True):
+            if not usuario or not senha:
+                st.warning("Preencha todos os campos.")
+            else:
+                ok = registrar_usuario(usuario, senha)
+                if ok:
+                    st.success("Conta criada com sucesso!")
+                    st.info("Voltando ao login...")
+                    try:
+                        st.switch_page("app.py")
+                    except:
+                        st.rerun()
 
-    st.write("---")
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    # 👉 Aqui está o botão que você pediu
-    if st.button("Criar conta"):
-        st.session_state["pagina"] = "registro"
-        st.rerun()
+    # Botão voltar
+    back = st.container()
+    with back:
+        if st.button("Voltar", use_container_width=True):
+            try:
+                st.switch_page("app.py")
+            except:
+                st.rerun()
 
-
-# --------------------- REGISTRO --------------------- #
-def mostrar_registro():
-    st.title("Criar Conta 👤")
-
-    user = st.text_input("Novo usuário")
-    pwd = st.text_input("Senha", type="password")
-
-    if st.button("Registrar"):
-        conn = conectar()
-        cursor = conn.cursor()
-        try:
-            cursor.execute("INSERT INTO usuarios (usuario, senha) VALUES (?, ?)", (user, pwd))
-            conn.commit()
-            st.success("Conta criada com sucesso! Faça login.")
-            st.session_state["pagina"] = "login"
-            st.rerun()
-        except:
-            st.error("Usuário já existe.")
-        conn.close()
-
-    if st.button("Voltar ao login"):
-        st.session_state["pagina"] = "login"
-        st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
-# --------------------- ÁREA LOGADA --------------------- #
-def mostrar_area_logada():
-
-    st.sidebar.title(f"Bem-vindo, {st.session_state['usuario']} 👋")
-
-    escolha = st.sidebar.radio(
-        "Menu",
-        ["Dashboard", "Despesas", "Entradas", "Configurações", "Logout"]
-    )
-
-    if escolha == "Dashboard":
-        st.title("📊 Dashboard")
-        st.write("Aqui você verá gráficos e dados financeiros.")
-
-    elif escolha == "Despesas":
-        st.title("💸 Despesas")
-        st.write("Listagem de despesas aqui.")
-
-    elif escolha == "Entradas":
-        st.title("💰 Entradas")
-        st.write("Listagem de entradas aqui.")
-
-    elif escolha == "Configurações":
-        st.title("⚙ Configurações")
-        st.write("Configurações do sistema.")
-
-    elif escolha == "Logout":
-        st.session_state["logado"] = False
-        st.session_state["pagina"] = "login"
-        st.session_state["usuario"] = ""
-        st.rerun()
-
-
-# --------------------- CONTROLADOR DE TELA --------------------- #
-def carregar_tela():
-    if not st.session_state["logado"]:
-        if st.session_state["pagina"] == "login":
-            mostrar_login()
-        else:
-            mostrar_registro()
-    else:
-        mostrar_area_logada()
-
-
-carregar_tela()
+if __name__ == "__main__":
+    mostrar_tela_registro()
