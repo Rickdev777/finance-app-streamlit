@@ -61,8 +61,8 @@ def carregar_tela():
     # ------- Conteúdo básico das páginas -------
     st.title(escolha)
 
-    if escolha == "Dashboard":
-        st.write("📊 Aqui ficará o seu dashboard financeiro.")
+    if escolha == "Tela inicial":
+        st.write("<-- Navegue na barra da esquerda.")
 
     elif escolha == "Despesas":
         st.write("💸 Cadastro e listagem de despesas.")
