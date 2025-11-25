@@ -5,21 +5,11 @@ from database import listar_despesas, adicionar_despesa, editar_despesa, excluir
 
 st.set_page_config(page_title="Despesas", layout="wide")
 
-def load_css():
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    css_path = os.path.join(base_dir, "..", "..", "style.css")
-    css_path = os.path.normpath(css_path)
-
-    try:
-        with open(css_path, "r", encoding="utf-8") as f:
-            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-    except FileNotFoundError:
-        st.warning("style.css não encontrado na raiz do projeto")
-    except Exception as e:
-        st.warning(f"Erro ao carregar CSS: {e}")
-
-load_css()
-
+try:
+    with open("style.css") as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+except FileNotFoundError:
+    pass
 
 if "usuario" not in st.session_state or not st.session_state["usuario"]:
     try:
