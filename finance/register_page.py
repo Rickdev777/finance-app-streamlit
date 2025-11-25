@@ -4,76 +4,92 @@ from database import registrar_usuario
 def mostrar_tela_registro():
     st.set_page_config(page_title="Criar Conta", layout="centered")
 
+    # CSS compatível com modo claro e escuro
     st.markdown("""
         <style>
-        /* Centraliza tudo na vertical e horizontal */
+
+        /* Centralizar tudo */
         .main {
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding-top: 40px;
+            padding-top: 4vh;
         }
 
-        /* Cartão */
-        .register-card {
-            background: var(--card-bg);
-            padding: 2.5rem;
-            border-radius: 14px;
-            width: 420px;
-            box-shadow: 0 8px 22px rgba(0,0,0,0.15);
+        /* Card moderno */
+        .register-wrapper {
+            width: 100%;
+            max-width: 420px;
+            background: var(--background-color);
+            padding: 2.2rem 2rem;
+            border-radius: 16px;
+            box-shadow: 0 6px 22px rgba(0,0,0,0.25);
+            backdrop-filter: blur(6px);
         }
 
-        /* Cores adaptáveis ao modo escuro */
+        /* Suporte a modo claro/escuro do Streamlit */
         :root {
-            --card-bg: #ffffff;
-            --text-color: #333333;
-            --subtext-color: #666666;
+            --background-color: rgba(255, 255, 255, 0.12);
+            --text-color: #e8e8e8;
+            --input-bg: rgba(255,255,255,0.08);
+            --button-primary: #4CAF50;
+            --button-secondary: #3b3d42;
         }
-        html[data-theme="dark"] {
-            --card-bg: #1f1f1f;
-            --text-color: #f2f2f2;
-            --subtext-color: #bbbbbb;
+
+        [data-theme="light"] {
+            --background-color: #ffffff;
+            --text-color: #333;
+            --input-bg: #f1f1f1;
+            --button-secondary: #e5e7eb;
         }
 
         .register-title {
-            font-size: 28px;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 0.3rem;
             color: var(--text-color);
+            text-align: center;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
         }
 
         .register-sub {
             text-align: center;
-            margin-bottom: 2rem;
-            color: var(--subtext-color);
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 1.8rem;
+        }
+
+        /* Inputs */
+        .stTextInput>div>div>input {
+            background: var(--input-bg) !important;
+            color: var(--text-color) !important;
+            border-radius: 10px !important;
+            height: 45px;
         }
 
         /* Botões */
-        .stButton > button {
-            background: #4CAF50 !important;
-            color: white !important;
-            padding: 0.7rem;
+        .stButton>button {
             width: 100%;
+            height: 45px;
             border-radius: 10px;
             font-size: 1rem;
             border: none;
         }
-        .back-btn > button {
-            background: #e2e5ea !important;
-            color: #333 !important;
+
+        /* Criar Conta */
+        .create-btn button {
+            background: var(--button-primary) !important;
+            color: white !important;
         }
 
-        /* Ajuste para tema escuro no botão voltar */
-        html[data-theme="dark"] .back-btn > button {
-            background: #444 !important;
-            color: #eee !important;
+        /* Voltar */
+        .back-btn button {
+            background: var(--button-secondary) !important;
+            color: var(--text-color) !important;
         }
+
         </style>
     """, unsafe_allow_html=True)
 
-    # container principal
-    st.markdown("<div class='register-card'>", unsafe_allow_html=True)
+    st.markdown("<div class='register-wrapper'>", unsafe_allow_html=True)
 
     st.markdown("<div class='register-title'>Criar nova conta</div>", unsafe_allow_html=True)
     st.markdown("<div class='register-sub'>Preencha seus dados abaixo.</div>", unsafe_allow_html=True)
@@ -81,28 +97,34 @@ def mostrar_tela_registro():
     usuario = st.text_input("Usuário")
     senha = st.text_input("Senha", type="password")
 
-    if st.button("Criar Conta"):
-        if not usuario or not senha:
-            st.warning("Preencha todos os campos.")
-        else:
-            ok = registrar_usuario(usuario, senha)
-            if ok:
-                st.success("Conta criada com sucesso!")
-                st.info("Voltando ao login...")
-                try:
-                    st.switch_page("app.py")
-                except:
-                    st.rerun()
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # Botão criar conta
+    create = st.container()
+    with create:
+        if st.button("Criar Conta", use_container_width=True):
+            if not usuario or not senha:
+                st.warning("Preencha todos os campos.")
             else:
-                st.error("Erro! Usuário já existe.")
+                ok = registrar_usuario(usuario, senha)
+                if ok:
+                    st.success("Conta criada com sucesso!")
+                    st.info("Voltando ao login...")
+                    try:
+                        st.switch_page("app.py")
+                    except:
+                        st.rerun()
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    if st.button("Voltar", key="back"):
-        try:
-            st.switch_page("app.py")
-        except:
-            st.rerun()
+    # Botão voltar
+    back = st.container()
+    with back:
+        if st.button("Voltar", use_container_width=True):
+            try:
+                st.switch_page("app.py")
+            except:
+                st.rerun()
 
     st.markdown("</div>", unsafe_allow_html=True)
 
