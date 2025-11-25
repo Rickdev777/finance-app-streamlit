@@ -1,6 +1,7 @@
 # pages/entradas.py
 import streamlit as st
 import pandas as pd
+import os
 from database import (
     listar_entradas,
     adicionar_entrada,
@@ -12,12 +13,11 @@ CATEGORIAS_ENTRADA = ["Salário", "Pix", "Bônus", "Presente", "Outros"]
 
 st.set_page_config(page_title="Entradas", layout="wide")
 
-# carrega CSS global se existir
-try:
-    with open("style.css") as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-except FileNotFoundError:
-    pass
+css_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "style.css")
+
+with open(css_path) as f:
+    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
 
 if "usuario" not in st.session_state:
     st.warning("Você precisa fazer login.")

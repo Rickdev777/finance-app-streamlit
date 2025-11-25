@@ -1,5 +1,12 @@
 import streamlit as st
 from database import autenticar_usuario
+import os
+
+css_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "style.css")
+
+with open(css_path) as f:
+    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
 
 def mostrar_login():
     st.title("🔐 Login")
