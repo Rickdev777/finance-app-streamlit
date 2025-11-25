@@ -8,6 +8,12 @@ st.set_page_config(page_title="Dashboard", layout="wide")
 
 css_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "style.css")
 
+
+def mostrar_dashboard():
+    st.title("📊 Dashboard")
+    st.write("Bem-vindo ao seu painel financeiro.")
+    st.write("Aqui você pode exibir gráficos, indicadores e resumos.")
+
 with open(css_path) as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
@@ -50,4 +56,5 @@ with colg2:
     if not df_ent.empty:
         fig = px.pie(df_ent, values="Valor", names="Categoria", title="Entradas por Categoria")
         st.plotly_chart(fig, use_container_width=True)
+
 

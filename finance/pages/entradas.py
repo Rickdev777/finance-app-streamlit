@@ -13,6 +13,12 @@ CATEGORIAS_ENTRADA = ["Salário", "Pix", "Bônus", "Presente", "Outros"]
 
 st.set_page_config(page_title="Entradas", layout="wide")
 
+
+def mostrar_entradas():
+    st.title("📥 Entradas")
+    st.write("Gerenciamento de entradas.")
+    st.write("Aqui você controla suas receitas e entradas financeiras.")
+
 css_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "style.css")
 
 with open(css_path) as f:

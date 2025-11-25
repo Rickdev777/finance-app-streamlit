@@ -1,6 +1,4 @@
-# app.py
 import streamlit as st
-import sqlite3
 from database import criar_tabelas, conectar
 from register_page import mostrar_tela_registro
 
