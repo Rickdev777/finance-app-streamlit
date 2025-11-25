@@ -1,6 +1,13 @@
 import streamlit as st
 import pandas as pd
 from database import listar_despesas, adicionar_despesa, editar_despesa, excluir_despesa
+import os
+
+
+css_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "style.css")
+
+with open(css_path) as f:
+    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 st.set_page_config(page_title="Despesas", layout="wide")
 

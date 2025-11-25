@@ -1,53 +1,88 @@
-# pages/registro.py  (ou register_page.py)
 import streamlit as st
 from database import registrar_usuario
 
 def mostrar_tela_registro():
-    st.set_page_config(page_title="Criar Conta", layout="wide")
+    st.set_page_config(page_title="Criar Conta", layout="centered")
 
-    # Carregar CSS (opcional)
-    try:
-        with open("style.css") as f:
-            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-    except FileNotFoundError:
-        pass
+    # CSS customizado elegante
+    st.markdown("""
+        <style>
+        body {
+            background: #f0f2f6;
+        }
+        .register-card {
+            background: white;
+            padding: 2rem 2.5rem;
+            border-radius: 14px;
+            max-width: 480px;
+            margin: auto;
+            margin-top: 60px;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.10);
+        }
+        .register-title {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.3rem;
+            color: #333;
+        }
+        .register-sub {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #666;
+        }
+        .stButton > button {
+            background: #4CAF50 !important;
+            color: white !important;
+            padding: 0.7rem 1.4rem;
+            width: 100%;
+            font-size: 1rem;
+            border-radius: 10px;
+            border: none;
+        }
+        .back-btn > button {
+            background: #e2e5ea !important;
+            color: #333 !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
-    st.title("📝 Criar nova conta")
-    st.markdown("Preencha os campos abaixo para criar seu usuário.")
+    with st.container():
+        st.markdown("<div class='register-card'>", unsafe_allow_html=True)
 
-    col1, col2 = st.columns([1, 1])
+        st.markdown("<div class='register-title'>Criar nova conta</div>", unsafe_allow_html=True)
+        st.markdown("<div class='register-sub'>Preencha seus dados abaixo.</div>", unsafe_allow_html=True)
 
-    with col1:
-        usuario = st.text_input("Usuário", key="reg_usuario")
-    with col2:
-        senha = st.text_input("Senha", type="password", key="reg_senha")
+        usuario = st.text_input("Usuário")
+        senha = st.text_input("Senha", type="password")
 
-    st.markdown("")
+        st.markdown("")
 
-    if st.button("Registrar Conta", use_container_width=True, key="reg_btn"):
-        if not usuario or not senha:
-            st.warning("Preencha usuário e senha.")
-        else:
-            ok = registrar_usuario(usuario, senha)
-            if ok:
-                st.success("Conta criada com sucesso! Faça login.")
-                st.info("Voltando para tela de login...")
-                # redireciona para app.py (se o seu fluxo usa st.switch_page)
-                try:
-                    st.switch_page("app.py")
-                except Exception:
-                    # fallback: apenas recarrega a página atual
-                    st.experimental_rerun()
+        if st.button("Criar Conta"):
+            if not usuario or not senha:
+                st.warning("Preencha todos os campos.")
             else:
-                st.error("Erro: Usuário já existe ou outro problema ocorreu.")
+                ok = registrar_usuario(usuario, senha)
+                if ok:
+                    st.success("Conta criada com sucesso!")
+                    st.info("Voltando ao login...")
+                    try:
+                        st.switch_page("app.py")
+                    except:
+                        st.rerun()
+                else:
+                    st.error("Erro! Usuário já existe.")
 
-    if st.button("Voltar", use_container_width=True, key="reg_voltar"):
-        try:
-            st.switch_page("app.py")
-        except Exception:
-            st.experimental_rerun()
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        if st.button("Voltar", key="back", help="Retornar ao login", use_container_width=True):
+            try:
+                st.switch_page("app.py")
+            except:
+                st.rerun()
+
+        st.markdown("</div>", unsafe_allow_html=True)
 
 
-# Permite executar a página diretamente (opcional)
 if __name__ == "__main__":
     mostrar_tela_registro()
