@@ -108,8 +108,9 @@ def mostrar_login():
 
     with col1:
         if st.button("Criar conta"):
-                st.session_state("register_page.py")
-                st.rerun
+                st.session_state["pagina"] = "registro"
+                st.rerun()
+
     with col2:
         if st.button("Esqueci a senha"):
             st.info("Função ainda não implementada.")

@@ -74,10 +74,6 @@ def carregar_tela():
         st.write("⚙️ Configurações da conta.")
 
 
-# ==========================================================
-# RENDERIZAÇÃO DA PÁGINA
-# ==========================================================
-# Garantir que registrar abre corretamente mesmo vindo do botão
 if st.session_state["pagina"] == "registro" and not st.session_state["logado"]:
     mostrar_tela_registro()
 else:
